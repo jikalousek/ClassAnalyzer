@@ -150,6 +150,8 @@ public class ClassAnalyzer<I> {
                     dataLine += "," + getMark(cc.getLine(i).getStatus());
                     headerLine += ",LINE" + i;
                 }
+                headerLine += ",STATUS";
+                dataLine += result?",P":",F";
 
                 writeToFile(className, testName, headerLine, dataLine);
             }
