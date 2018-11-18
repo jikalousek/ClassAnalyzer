@@ -68,7 +68,7 @@ public class TargetClassTest extends ClassAnalyzer<ITargetClass> {
         arg2 = 2;
         expResult = 2;
         result = instance.max(arg1, arg2);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max2", expResult == result, arg1, arg2));
+        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
         assertEquals(expResult, result);
 
         // test case 2
@@ -76,7 +76,7 @@ public class TargetClassTest extends ClassAnalyzer<ITargetClass> {
         arg2 = 1;
         expResult = 2;
         result = instance.max(arg1, arg2);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max2", expResult == result, arg1, arg2));
+        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
         assertEquals(expResult, result);
     }
 
