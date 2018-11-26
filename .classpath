@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="lib" path="lib/asm-6.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/asm-analysis-6.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/asm-commons-6.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/asm-test-6.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/asm-tree-6.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/asm-util-6.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/asm-xml-6.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/org.jacoco.core-0.8.2.201808211720.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

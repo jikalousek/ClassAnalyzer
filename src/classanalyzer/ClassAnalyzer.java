@@ -243,4 +243,8 @@ public class ClassAnalyzer<I> {
         bwNew.newLine();
         bwNew.close();
     }
+
+    private void readFromFile(String fileName) throws IOException{
+        FILE file = new File();
+    }
 }
