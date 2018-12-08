@@ -244,14 +244,5 @@ public class ClassAnalyzer<I> {
         bwNew.write(dataLine);
         bwNew.newLine();
         bwNew.close();
-
-        String fileName = className+"_"+testName+".csv";
-        calculateTarantula(fileName);
-    }
-
-    private void calculateTarantula(String fileName) throws IOException{
-        FileReader file = new FileReader(fileName);
-        BufferedReader read = new BufferedReader(file);
-        
     }
 }
