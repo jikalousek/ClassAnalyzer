@@ -1,0 +1,4 @@
+className,testName,ARG1,ARG2,LINE25,LINE26,LINE27,LINE28,LINE29,LINE30,LINE31,LINE32,STATUS
+example/TargetClass,max,1,2,-,,,,+,+,,-,P
+example/TargetClass,max,2,1,+,,,,+,-,,+,P
+,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
