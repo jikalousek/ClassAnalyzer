@@ -24,6 +24,6 @@ package example;
  */
 public interface ITargetClass {
 
-    public int max(final int a, final int b);
+    public int mid(int x, int y, int z);
 
 }
