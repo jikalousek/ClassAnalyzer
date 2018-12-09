@@ -25,12 +25,24 @@ package example;
 public class TargetClass implements ITargetClass {
 
     @Override
-    public int max(final int a, final int b) {
-        if (a >= b) {
-            return a;
-        } else {
-            return b;
+    public int mid(int x, int y, int z){
+        int m = z;
+        if(y < z){
+            if(x < y){
+                m = y;
+            }
+            else if (x < z){
+                m = y; //bug
+            }
+        } else{
+            if (x > y){
+                m = y;
+            }
+            else if(x > z){
+                m = x;
+            }
         }
+        return m;
     }
 
 }
