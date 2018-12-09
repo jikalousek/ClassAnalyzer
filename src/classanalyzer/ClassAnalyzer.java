@@ -220,11 +220,11 @@ public class ClassAnalyzer<I> {
     private String getMark(final int status) {
         switch (status) {
             case ICounter.NOT_COVERED:
-                return "+";
+                return "-";
             case ICounter.PARTLY_COVERED:
                 return "+";
             case ICounter.FULLY_COVERED:
-                return "-";
+                return "+";
         }
         return "";
     }
