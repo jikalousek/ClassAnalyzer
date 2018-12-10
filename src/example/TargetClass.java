@@ -44,5 +44,57 @@ public class TargetClass implements ITargetClass {
         }
         return m;
     }
+    
+    @Override
+    public int[] bubleSort(int[] arr){
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = 0; j < arr.length - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    //arr[j + 1] = temp;
+                    arr[j+1] = temp+temp/8; //bug
+                }
+            }
+        }
+        return arr;
+    }
+    
+    @Override
+    public String numParser(int num){
+        String ret = "";
+        switch(num){
+            case 0:
+                ret = "zero";
+                break;
+            case 1:
+                ret = "one";
+                break;
+            case 2:
+                ret = "two";
+                break;
+            case 3:
+                ret = "three";
+                break;
+            case 4:
+                ret = "four";
+                break;
+            case 5:
+                ret = "five"; //bug
+            case 6:
+                ret = "six";
+                break;
+            case 7:
+                ret = "seven";
+                break;
+            case 8:
+                ret = "eight";
+                break;
+            case 9:
+                ret = "zero"; //bug
+                break;
+        }
+        return ret;
+    }
 
 }

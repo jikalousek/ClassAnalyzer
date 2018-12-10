@@ -25,5 +25,7 @@ package example;
 public interface ITargetClass {
 
     public int mid(int x, int y, int z);
+    public int[] bubleSort(int[] arr);
+    public String numParser(int num);
 
 }
