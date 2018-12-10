@@ -67,7 +67,7 @@ public class suspiciousnessCalculator{
                         checkers[column++][row] = 0;
                     }
                     else if(lines.get(lineNo).get(columnNo).equals("")){
-                        checkers[column++][row] = 1;
+                        checkers[column++][row] = -1;
                     }
                 }
                 else if(columnNo == stat){
@@ -118,9 +118,6 @@ public class suspiciousnessCalculator{
             for(column = 0; column < checkers.length; column++){
                 suspiciousness[column] = 0;
             }
-        }
-
-        for(column = 0; column < suspiciousness.length; column++){
         }
 
         String suspicious = "";

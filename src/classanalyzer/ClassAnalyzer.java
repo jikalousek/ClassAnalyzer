@@ -268,7 +268,7 @@ public class ClassAnalyzer<I> {
     }
     
     private String getSuspiciousness(String instrResults){
-        String suspicLine = "SUSPICIOUSNESS";
+        String suspicLine = "";
         
         // TODO code from suspiciousnessCalculator (below)
         
@@ -283,10 +283,112 @@ public class ClassAnalyzer<I> {
             lines.add(Arrays.asList(values));
         }
         inputStream.close();
-        
-        //...
-        
-        suspicLine += ""; // ,...,suspiciousness1,suspiciousness2,...
+
+        int lineNo;
+        int columnNo;
+        List<Integer> containLine = new ArrayList<>();
+        int stat = 0;
+        int lastArgs = 0;
+        for(lineNo = 0; lineNo < lines.size(); lineNo++){
+            for(columnNo = 0; columnNo < lines.get(lineNo).size(); columnNo++){
+                if(lines.get(lineNo).get(columnNo).contains("LINE")){
+                    containLine.add(columnNo);
+                }
+                else if(lines.get(lineNo).get(columnNo).contains("STATUS")){
+                    stat = columnNo;
+                }
+                else if(lines.get(lineNo).get(columnNo).contains("ARG")){
+                    lastArgs = columnNo;
+                }
+            }
+        }
+
+        int[][] checkers = new int[containLine.size()][lines.size()-1];
+        String[][] pass = new String[1][lines.size() - 1];
+        int column = 0;
+        int row = 0;
+        for(lineNo = 1; lineNo < lines.size(); lineNo++){
+            column = 0;
+            for(columnNo = 0; columnNo < lines.get(lineNo).size(); columnNo++){
+                if(containLine.contains(columnNo)){
+                    if(lines.get(lineNo).get(columnNo).equals("+")){
+                        checkers[column++][row] = 1;
+                    }
+                    else if(lines.get(lineNo).get(columnNo).equals("-")){
+                        checkers[column++][row] = 0;
+                    }
+                    else if(lines.get(lineNo).get(columnNo).equals("")){
+                        checkers[column++][row] = -1;
+                    }
+                }
+                else if(columnNo == stat){
+                    if(lines.get(lineNo).get(columnNo).equals("P")){
+                        pass[0][row] = "P";
+                    }
+                    else{
+                        pass[0][row] = "F";
+                    }
+                }
+            }
+            row++;
+        }
+        float totalPassed = 0;
+        float totalFailed = 0;
+        for(row = 0; row < pass[0].length; row++){
+            if(pass[0][row] != null){
+                if(pass[0][row].equals("P")){
+                    totalPassed++;
+                }
+                else{
+                    totalFailed++;
+                }
+            }
+        }
+
+        System.out.println("Total Passed: " + totalPassed);
+        System.out.println("Total Failed: " + totalFailed);
+        float passed = 0;
+        float failed = 0;
+        float[] suspiciousness = new float[containLine.size()];
+        if(totalFailed > 0 && totalPassed > 0){
+            for(column = 0; column < checkers.length; column++){
+                for(row = 0; row < checkers[column].length; row++){
+                    if(checkers[column][row] == 1 && pass[0][row].equals("P")){
+                        passed++;
+                    }
+                    else if(checkers[column][row] == 1 && pass[0][row].equals("F")){
+                        failed++;
+                    }
+                }
+                suspiciousness[column] = (failed/totalFailed)/((passed/totalPassed)+(failed/totalFailed));
+                passed = 0;
+                failed = 0;
+            }
+        }
+        else{
+            for(column = 0; column < checkers.length; column++){
+                suspiciousness[column] = 0;
+            }
+        }
+
+        int susColumn = 0;
+        for(column = 0; column < lines.get(0).size(); column++){
+            if(column < lastArgs){
+                suspicLine += ",";
+            }
+            else if(column == lastArgs){
+                suspicLine += "suspiciousness";
+            }
+            else if (susColumn < suspiciousness.length){
+                String floatToString = Float.toString(suspiciousness[susColumn]);
+                String textToInsert = floatToString+",";
+                suspicious += textToInsert;
+                susColumn++;
+            }
+            else{
+                suspicious += "";
+            }
+        }
         
         return suspicLine + "\n";
     }
