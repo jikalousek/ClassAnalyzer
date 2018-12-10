@@ -1,0 +1,7 @@
+className,testName,ARG1,ARG2,LINE25,LINE26,LINE27,LINE28,LINE29,LINE30,LINE31,LINE32,LINE33,LINE34,LINE35,LINE36,LINE37,LINE38,LINE39,LINE40,LINE41,LINE42,LINE43,LINE44,LINE45,STATUS
+example/TargetClass,max,3,3,+,,,,+,+,+,-,,+,+,,,-,-,,-,-,,,+,P
+example/TargetClass,max,1,2,-,,,,+,+,+,+,,-,-,,,-,-,,-,-,,,+,P
+example/TargetClass,max,3,2,-,,,,+,+,-,-,,-,-,,,+,+,,-,-,,,+,P
+example/TargetClass,max,5,5,-,,,,+,+,-,-,,-,-,,,+,-,,+,-,,,+,P
+example/TargetClass,max,5,3,-,,,,+,+,+,-,,+,-,,,-,-,,-,-,,,+,P
+example/TargetClass,max,2,1,-,,,,+,+,+,-,,+,+,,,-,-,,-,-,,,+,F
