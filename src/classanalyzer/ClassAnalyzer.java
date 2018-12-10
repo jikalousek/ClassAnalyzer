@@ -158,7 +158,7 @@ public class ClassAnalyzer<I> {
                     headerLine += ",ARG" + (i + 1);
                 }
 
-                for (int i = cc.getFirstLine(); i <= cc.getLastLine(); i++) {
+                for (int i = cc.getFirstLine()+1; i <= cc.getLastLine(); i++) {
                     //System.out.printf("Line %s: %s%n", Integer.valueOf(i), getColor(cc.getLine(i).getStatus()));
                     dataLine += "," + getMark(cc.getLine(i).getStatus());
                     headerLine += ",LINE" + i;
@@ -270,8 +270,6 @@ public class ClassAnalyzer<I> {
     private String getSuspiciousness(String instrResults){
         String suspicLine = "";
         
-        // TODO code from suspiciousnessCalculator (below)
-        
         //2-dimensional array of strings
         List<List<String>> lines = new ArrayList<>();
         Scanner inputStream;
@@ -321,7 +319,7 @@ public class ClassAnalyzer<I> {
                         checkers[column++][row] = -1;
                     }
                 }
-                else if(columnNo == stat){
+                else if(columnNo == stat){ 
                     if(lines.get(lineNo).get(columnNo).equals("P")){
                         pass[0][row] = "P";
                     }
@@ -377,16 +375,22 @@ public class ClassAnalyzer<I> {
                 suspicLine += ",";
             }
             else if(column == lastArgs){
-                suspicLine += "suspiciousness";
+                suspicLine += "suspiciousness,";
             }
             else if (susColumn < suspiciousness.length){
-                String floatToString = Float.toString(suspiciousness[susColumn]);
+                String floatToString;
+                if(Float.isNaN(suspiciousness[susColumn])){
+                    floatToString = "";
+                }
+                else{
+                    floatToString = Float.toString(suspiciousness[susColumn]);
+                }
                 String textToInsert = floatToString+",";
-                suspicious += textToInsert;
+                suspicLine += textToInsert;
                 susColumn++;
             }
             else{
-                suspicious += "";
+                suspicLine += "";
             }
         }
         
