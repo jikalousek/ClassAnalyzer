@@ -52,11 +52,11 @@ public class TargetClassTest extends ClassAnalyzer<ITargetClass> {
     @After
     public void tearDown() throws IOException {
     }
-
+    
     @Test
-    public void testMax() {
+    public void testMid() {
         // test of method max
-        System.out.println("-- testMax --");
+        System.out.println("-- testMid --");
 
         int result;
         ITargetClass instance = super.newInstrumentedInstance();
@@ -75,8 +75,8 @@ public class TargetClassTest extends ClassAnalyzer<ITargetClass> {
         for (int i = 0; i < expResult.length; i++) {
             result = instance.mid(arg1[i], arg2[i], arg3[i]);
             assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults(expResult[i] == result, arg1[i], arg2[i], arg3[i]));
-            assertEquals(expResult, result);
+            assertEquals(expResult[i], result);
         }
     }
-
+    
 }

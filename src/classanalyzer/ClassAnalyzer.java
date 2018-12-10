@@ -16,10 +16,8 @@
  */
 package classanalyzer;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +36,7 @@ import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.runtime.RuntimeData;
+import org.junit.After;
 import org.junit.Rule;
 
 /**
@@ -61,11 +60,13 @@ public class ClassAnalyzer<I> {
     private RuntimeData data;
     private Class<?> targetClass;
 
+    private String instrResults = "";
+
     public ClassAnalyzer(Class classClass) {
         this.classClass = classClass;
         rule = new ClassAnalyzerRule<>(this);
     }
-    
+
     @Rule
     public ClassAnalyzerRule<I> rule;
 
@@ -119,11 +120,11 @@ public class ClassAnalyzer<I> {
      * is raised.
      */
     public boolean saveInstrumentationResults(boolean result, Object... args) {
-        
+
         // get name of the test method that called this method
         final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
         String testName = ste[2].getMethodName();
-        
+
         try {
             // At the end of test execution we collect execution data and shutdown
             // the runtime:
@@ -144,8 +145,9 @@ public class ClassAnalyzer<I> {
             for (final IClassCoverage cc : coverageBuilder.getClasses()) {
 
                 //System.out.printf("Coverage of class %s%n", cc.getName());
-                String headerLine = "className,testName";
-                String dataLine = cc.getName() + "," + testName;
+                String methodId = getMethodId(testName);
+                String headerLine = "methodId";
+                String dataLine = methodId;
                 for (int i = 0; i < args.length; i++) {
                     dataLine += "," + args[i];
                     headerLine += ",ARG" + (i + 1);
@@ -157,9 +159,15 @@ public class ClassAnalyzer<I> {
                     headerLine += ",LINE" + i;
                 }
                 headerLine += ",STATUS";
-                dataLine += result?",P":",F";
+                dataLine += result ? ",P" : ",F";
 
-                writeToFile(className, testName, headerLine, dataLine);
+                if (instrResults.equals("")) {
+                    instrResults += headerLine + "\n";
+                }
+
+                instrResults += dataLine + "\n";
+
+                break;
             }
 
             data.reset();
@@ -232,20 +240,22 @@ public class ClassAnalyzer<I> {
         }
         return "";
     }
-    
-    private void writeToFile(String className, String testName, String headerLine, String dataLine) throws IOException {
-        className = className.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
-        testName = testName.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
-        File file = new File(className + "_" + testName + ".csv");
-        boolean fileExists = file.exists();
+
+    private String getMethodId(String methodName) {
+        return getClassId() + "_" + methodName.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
+    }
+
+    private String getClassId() {
+        return this.className.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
+    }
+
+    @After
+    public void writeToFile() throws IOException {
+        File file = new File(getClassId() + ".csv");
         BufferedWriter bwNew = new BufferedWriter(new FileWriter(file, true));
 
-        //if file does not exist, start with writing a header line
-        if (!fileExists) {
-            bwNew.write(headerLine);
-            bwNew.newLine();
-        }
-        bwNew.write(dataLine);
+        bwNew.write(instrResults);
+        //TODO compute and save suspiciousness
         bwNew.newLine();
         bwNew.close();
     }
