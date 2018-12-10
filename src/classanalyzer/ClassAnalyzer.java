@@ -16,15 +16,18 @@
  */
 package classanalyzer;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +41,7 @@ import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.runtime.RuntimeData;
+import org.junit.After;
 import org.junit.Rule;
 
 /**
@@ -61,11 +65,13 @@ public class ClassAnalyzer<I> {
     private RuntimeData data;
     private Class<?> targetClass;
 
+    private String instrResults = "";
+
     public ClassAnalyzer(Class classClass) {
         this.classClass = classClass;
         rule = new ClassAnalyzerRule<>(this);
     }
-    
+
     @Rule
     public ClassAnalyzerRule<I> rule;
 
@@ -113,13 +119,17 @@ public class ClassAnalyzer<I> {
      * This method collects execution data and saves results to a csv file. For
      * each test of each class there is a unique csv file created.
      *
-     * @param testName Name of the performed JUnit test (usually method name).
      * @param result Result of the JUnit test (to be written into the file).
      * @param args Arguments of tested method.
      * @return True if successfully saved or false if IOException or Exception
      * is raised.
      */
-    public boolean saveInstrumentationResults(String testName, boolean result, Object... args) {
+    public boolean saveInstrumentationResults(boolean result, Object... args) {
+
+        // get name of the test method that called this method
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String testName = ste[2].getMethodName();
+
         try {
             // At the end of test execution we collect execution data and shutdown
             // the runtime:
@@ -140,8 +150,9 @@ public class ClassAnalyzer<I> {
             for (final IClassCoverage cc : coverageBuilder.getClasses()) {
 
                 //System.out.printf("Coverage of class %s%n", cc.getName());
-                String headerLine = "className,testName";
-                String dataLine = cc.getName() + "," + testName;
+                String methodId = getMethodId(testName);
+                String headerLine = "METHOD_ID";
+                String dataLine = methodId;
                 for (int i = 0; i < args.length; i++) {
                     dataLine += "," + args[i];
                     headerLine += ",ARG" + (i + 1);
@@ -153,9 +164,15 @@ public class ClassAnalyzer<I> {
                     headerLine += ",LINE" + i;
                 }
                 headerLine += ",STATUS";
-                dataLine += result?",P":",F";
+                dataLine += result ? ",P" : ",F";
 
-                writeToFile(className, testName, headerLine, dataLine);
+                if (instrResults.equals("")) {
+                    instrResults += headerLine + "\n";
+                }
+
+                instrResults += dataLine + "\n";
+
+                break;
             }
 
             data.reset();
@@ -229,20 +246,48 @@ public class ClassAnalyzer<I> {
         return "";
     }
 
-    private void writeToFile(String className, String testName, String headerLine, String dataLine) throws IOException {
-        className = className.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
-        testName = testName.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
-        File file = new File(className + "_" + testName + ".csv");
-        boolean fileExists = file.exists();
+    private String getMethodId(String methodName) {
+        return getClassId() + "_" + methodName.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
+    }
+
+    private String getClassId() {
+        return this.className.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
+    }
+
+    @After
+    public void writeToFile() throws IOException {
+        File file = new File(getClassId() + ".csv");
         BufferedWriter bwNew = new BufferedWriter(new FileWriter(file, true));
 
-        //if file does not exist, start with writing a header line
-        if (!fileExists) {
-            bwNew.write(headerLine);
-            bwNew.newLine();
-        }
-        bwNew.write(dataLine);
+        bwNew.write(instrResults);
+        bwNew.newLine();
+        bwNew.write(getSuspiciousness(instrResults));
+        bwNew.newLine();
         bwNew.newLine();
         bwNew.close();
+    }
+    
+    private String getSuspiciousness(String instrResults){
+        String suspicLine = "SUSPICIOUSNESS";
+        
+        // TODO code from suspiciousnessCalculator (below)
+        
+        //2-dimensional array of strings
+        List<List<String>> lines = new ArrayList<>();
+        Scanner inputStream;
+        inputStream = new Scanner(instrResults);
+        while (inputStream.hasNext()){
+            String line = inputStream.next();
+            String[] values = line.split(",");
+            // this adds the currently parsed line to the 2-dimensional string array
+            lines.add(Arrays.asList(values));
+        }
+        inputStream.close();
+        
+        //...
+        
+        suspicLine += ""; // ,...,suspiciousness1,suspiciousness2,...
+        
+        return suspicLine + "\n";
     }
 }
