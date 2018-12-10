@@ -18,11 +18,16 @@ package classanalyzer;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -146,7 +151,7 @@ public class ClassAnalyzer<I> {
 
                 //System.out.printf("Coverage of class %s%n", cc.getName());
                 String methodId = getMethodId(testName);
-                String headerLine = "methodId";
+                String headerLine = "METHOD_ID";
                 String dataLine = methodId;
                 for (int i = 0; i < args.length; i++) {
                     dataLine += "," + args[i];
@@ -255,8 +260,34 @@ public class ClassAnalyzer<I> {
         BufferedWriter bwNew = new BufferedWriter(new FileWriter(file, true));
 
         bwNew.write(instrResults);
-        //TODO compute and save suspiciousness
+        bwNew.newLine();
+        bwNew.write(getSuspiciousness(instrResults));
+        bwNew.newLine();
         bwNew.newLine();
         bwNew.close();
+    }
+    
+    private String getSuspiciousness(String instrResults){
+        String suspicLine = "SUSPICIOUSNESS";
+        
+        // TODO code from suspiciousnessCalculator (below)
+        
+        //2-dimensional array of strings
+        List<List<String>> lines = new ArrayList<>();
+        Scanner inputStream;
+        inputStream = new Scanner(instrResults);
+        while (inputStream.hasNext()){
+            String line = inputStream.next();
+            String[] values = line.split(",");
+            // this adds the currently parsed line to the 2-dimensional string array
+            lines.add(Arrays.asList(values));
+        }
+        inputStream.close();
+        
+        //...
+        
+        suspicLine += ""; // ,...,suspiciousness1,suspiciousness2,...
+        
+        return suspicLine + "\n";
     }
 }
