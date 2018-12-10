@@ -113,13 +113,17 @@ public class ClassAnalyzer<I> {
      * This method collects execution data and saves results to a csv file. For
      * each test of each class there is a unique csv file created.
      *
-     * @param testName Name of the performed JUnit test (usually method name).
      * @param result Result of the JUnit test (to be written into the file).
      * @param args Arguments of tested method.
      * @return True if successfully saved or false if IOException or Exception
      * is raised.
      */
-    public boolean saveInstrumentationResults(String testName, boolean result, Object... args) {
+    public boolean saveInstrumentationResults(boolean result, Object... args) {
+        
+        // get name of the test method that called this method
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String testName = ste[2].getMethodName();
+        
         try {
             // At the end of test execution we collect execution data and shutdown
             // the runtime:
@@ -228,7 +232,7 @@ public class ClassAnalyzer<I> {
         }
         return "";
     }
-
+    
     private void writeToFile(String className, String testName, String headerLine, String dataLine) throws IOException {
         className = className.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();
         testName = testName.replace('/', '_').replace('.', '_').replace('\\', '_').toLowerCase();

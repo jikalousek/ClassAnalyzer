@@ -57,78 +57,26 @@ public class TargetClassTest extends ClassAnalyzer<ITargetClass> {
     public void testMax() {
         // test of method max
         System.out.println("-- testMax --");
-        int arg1, arg2, arg3, expResult, result;
+
+        int result;
         ITargetClass instance = super.newInstrumentedInstance();
         if (instance == null) {
             fail("Failed to create instrumented instance.");
+            return;
         }
 
-        // test case 1
-        arg1 = 3;
-        arg2 = 3;
-        arg3 = 5;
-        expResult = 3;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
+        // test vectors
+        int[] arg1 =      {3,1,3,5,5,2,2,2};
+        int[] arg2 =      {3,2,2,5,3,1,1,1};
+        int[] arg3 =      {5,3,1,5,4,3,3,3};
+        int[] expResult = {3,2,2,5,4,2,2,2};
 
-        // test case 2
-        arg1 = 1;
-        arg2 = 2;
-        arg3 = 3;
-        expResult = 2;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
-        
-        // test case 3
-        arg1 = 3;
-        arg2 = 2;
-        arg3 = 1;
-        expResult = 2;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
-        
-        arg1 = 5;
-        arg2 = 5;
-        arg3 = 5;
-        expResult = 5;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
-        
-        arg1 = 5;
-        arg2 = 3;
-        arg3 = 4;
-        expResult = 4;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
-        
-        arg1 = 2;
-        arg2 = 1;
-        arg3 = 3;
-        expResult = 2;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
-        
-        arg1 = 2;
-        arg2 = 1;
-        arg3 = 3;
-        expResult = 2;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
-        
-        arg1 = 2;
-        arg2 = 1;
-        arg3 = 3;
-        expResult = 2;
-        result = instance.mid(arg1, arg2, arg3);
-        assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults("max", expResult == result, arg1, arg2));
-        assertEquals(expResult, result);
+        // testing
+        for (int i = 0; i < expResult.length; i++) {
+            result = instance.mid(arg1[i], arg2[i], arg3[i]);
+            assertTrue("Failed to save instrumentation results.", super.saveInstrumentationResults(expResult[i] == result, arg1[i], arg2[i], arg3[i]));
+            assertEquals(expResult, result);
+        }
     }
 
 }
