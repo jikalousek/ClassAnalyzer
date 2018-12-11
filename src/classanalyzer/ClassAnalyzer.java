@@ -18,7 +18,6 @@ package classanalyzer;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +46,8 @@ import org.junit.Rule;
 /**
  * This class gathers all necessary objects for instrumentation of a class code.
  * Instrumented class has to have an interface that defines all methods that
- * will be tested. This "ClassAnalyzer" allows tracking of code execution.
+ * will be tested. This "ClassAnalyzer" allows tracking of code execution. Class
+ * with unit tests has to extend ClassAnalyzer<>.
  *
  * The code in this class is inspired by an example from JaCoCo library.
  *
